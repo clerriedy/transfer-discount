@@ -10,7 +10,17 @@ const PORT = 3000;
 
 app.use(express.json());
 
+const processingOrders = new Set();
+
 app.post("/webhooks/orders/create", async (req, res) => {
+  const orderId = req.body.id;
+
+  if (processingOrders.has(orderId)) {
+    console.log(`Pedido ${orderId} ya está siendo procesado.`);
+    return res.status(429).send("Pedido ya está siendo procesado.");
+  }
+
+  processingOrders.add(orderId);
   console.log("Llegó la request al webhook:", {
     gateway: req.body.gateway,
   });
@@ -22,6 +32,8 @@ app.post("/webhooks/orders/create", async (req, res) => {
   } catch (error) {
     console.error("Error en el manejador del webhook:", error); // Log para depuración
     res.status(500).json({ error: error.message });
+  } finally {
+    processingOrders.delete(orderId);
   }
 });
 

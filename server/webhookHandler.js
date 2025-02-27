@@ -15,9 +15,16 @@ const shopify = shopifyApi({
 
 export const handleOrderCreate = async (order) => {
   console.log("Procesando pedido:", order); // Log para depuración
+
+  // Verificar que payment_gateway_names existe y es un array
+  if (!order.payment_gateway_names || !Array.isArray(order.payment_gateway_names) || order.payment_gateway_names.length === 0) {
+    console.warn("payment_gateway_names no está presente o no es un array válido, usando método de pago por defecto"); // Log para depuración
+    order.payment_gateway_names = ["default_payment_method"];
+  }
+
   const paymentMethod = order.payment_gateway_names[0];
 
-  if (paymentMethod === "bank_transfer") {
+  if (paymentMethod === "bank_transfer" || paymentMethod === "default_payment_method") {
     const client = new shopify.clients.Rest({
       session: {
         accessToken: process.env.SHOPIFY_ACCESS_TOKEN,

@@ -12,11 +12,15 @@ app.use(express.json());
 
 const processingOrders = new Set();
 
-// Función para implementar un delay
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+let fromGateway = null;
 
 app.post("/webhooks/orders/create", async (req, res) => {
   const orderId = req.body.id;
+  fromGateway = req.body.gateway;
+
+  if (fromGateway !== "Bank Deposit" || fromGateway === req.body.gateway) {
+    res.status(200).send({});
+  }
 
   if (processingOrders.has(orderId)) {
     console.log(`Pedido ${orderId} ya está siendo procesado.`);
@@ -29,8 +33,6 @@ app.post("/webhooks/orders/create", async (req, res) => {
   });
 
   try {
-    // Implementar un delay de 5 segundos (5000 ms)
-    await delay(5000);
 
     const result = await handleOrderCreate(req.body);
     console.log("Resultado del manejador del webhook:", result); // Log para depuración

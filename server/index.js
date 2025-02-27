@@ -12,6 +12,9 @@ app.use(express.json());
 
 const processingOrders = new Set();
 
+// Función para implementar un delay
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 app.post("/webhooks/orders/create", async (req, res) => {
   const orderId = req.body.id;
 
@@ -26,6 +29,9 @@ app.post("/webhooks/orders/create", async (req, res) => {
   });
 
   try {
+    // Implementar un delay de 5 segundos (5000 ms)
+    await delay(5000);
+
     const result = await handleOrderCreate(req.body);
     console.log("Resultado del manejador del webhook:", result); // Log para depuración
     res.status(200).send(result);

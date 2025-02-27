@@ -7,7 +7,7 @@ dotenv.config();
 const shopify = shopifyApi({
   apiKey: process.env.SHOPIFY_API_KEY,
   apiSecretKey: process.env.SHOPIFY_API_SECRET,
-  scopes: ["write_discounts"],
+  scopes: ["write_discounts", "write_orders"], // Asegúrate de incluir write_orders
   hostName: process.env.HOST,
   apiVersion: ApiVersion.October23,
   isEmbeddedApp: false,

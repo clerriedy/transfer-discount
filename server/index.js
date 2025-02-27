@@ -13,7 +13,7 @@ app.use(express.json());
 app.post("/webhooks/orders/create", async (req, res) => {
   console.log("Llegó la request al webhook:", {
     gateway: req.body.gateway,
-  })
+  });
 
   try {
     const result = await handleOrderCreate(req.body);

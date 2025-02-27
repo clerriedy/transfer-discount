@@ -76,10 +76,13 @@ app.post("/create-discount", async (req, res) => {
 });
 
 app.post("/webhooks/orders/create", async (req, res) => {
+  console.log("Webhook recibido:", req.body); // Log para depuración
   try {
     const result = await handleOrderCreate(req.body);
+    console.log("Resultado del manejador del webhook:", result); // Log para depuración
     res.status(200).send(result);
   } catch (error) {
+    console.error("Error en el manejador del webhook:", error); // Log para depuración
     res.status(500).json({ error: error.message });
   }
 });

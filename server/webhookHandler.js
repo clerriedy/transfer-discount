@@ -35,7 +35,7 @@ export const handleOrderCreate = async (order) => {
           target_selection: "all",
           allocation_method: "across",
           value_type: "fixed_amount",
-          value: 10,
+          value: -10,
           customer_selection: "all",
           starts_at: new Date().toISOString(),
         },

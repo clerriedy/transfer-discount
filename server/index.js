@@ -18,6 +18,11 @@ app.post("/webhooks/orders/create", async (req, res) => {
   const orderId = req.body.id;
   fromGateway = req.body.gateway;
 
+  console.log("--------------- Llegó la request al webhook ---------------", {
+    gateway: req.body.gateway,
+    valorGatewayInterno: fromGateway,
+  });
+
   if (fromGateway !== "Bank Deposit" || fromGateway === req.body.gateway) {
     return res.status(200).send({});
   }
@@ -28,10 +33,6 @@ app.post("/webhooks/orders/create", async (req, res) => {
   }
 
   processingOrders.add(orderId);
-
-  console.log("Llegó la request al webhook:", {
-    gateway: req.body.gateway,
-  });
 
   try {
     console.log('--------------- Entra al handleOrderCreate ---------------');

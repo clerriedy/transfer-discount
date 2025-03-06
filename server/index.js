@@ -12,7 +12,7 @@ app.use(express.json());
 
 const processingOrders = new Set();
 
-let fromGateway = null;
+let fromGateway = "Credit card";
 
 app.post("/webhooks/orders/create", async (req, res) => {
   const orderId = req.body.id;
@@ -40,7 +40,10 @@ app.post("/webhooks/orders/create", async (req, res) => {
 
     console.log("Resultado del manejador del webhook:", result); // Log para depuración
 
-    res.status(200).send(result);
+    //res.status(200).send(result);
+    res.status(200).send({
+
+    });
   } catch (error) {
     console.error("Error en el manejador del webhook:", error); // Log para depuración
     res.status(500).json({ error: error.message });

@@ -58,7 +58,6 @@ export const handleOrderCreate = async (order) => {
 
     // Aplicar el código de descuento a la orden
 
-    /*
     console.log('--------------- Llega al PUT ---------------')
 
     await client.put({
@@ -69,14 +68,13 @@ export const handleOrderCreate = async (order) => {
           discount_codes: [
             {
               code: uniqueCode,
-              amount: 10,
+              amount: -10,
               type: "percentaje",
             },
           ],
         },
       },
     });
-    */
 
     console.log('--------------- Termina la ejecución de los métodos ---------------')
 

@@ -10,27 +10,8 @@ const PORT = 3000;
 
 app.use(express.json());
 
-const processingOrders = new Set();
-
 app.post("/webhooks/orders/create", async (req, res) => {
   const orderId = req.body.id;
-  //fromGateway = req.body.gateway;
-
-  //console.log("--------------- Llegó la request al webhook ---------------", {
-  //  gateway: req.body.gateway,
-  //  valorGatewayInterno: fromGateway,
-  //});
-
-  //if (fromGateway !== "Bank Deposit" || fromGateway === req.body.gateway) {
-  //  return res.status(200).send({});
-  //}
-
-  //if (processingOrders.has(orderId)) {
-  //  console.log(`Pedido ${orderId} ya está siendo procesado.`);
-  //  return res.status(429).send("Pedido ya está siendo procesado.");
-  //}
-
-  //processingOrders.add(orderId);
 
   console.log('--------------- Valor del gateway ---------------', {
     orderId: req.body.id,

@@ -16,7 +16,6 @@ const shopify = shopifyApi({
 export const handleOrderCreate = async (order) => {
   console.log("--------------- Procesando pedido ---------------");
 
-  //if (paymentMethod === "Bank Deposit") {
   const client = new shopify.clients.Rest({
     session: {
       accessToken: process.env.SHOPIFY_ACCESS_TOKEN,
@@ -44,6 +43,7 @@ export const handleOrderCreate = async (order) => {
       },
     });
 
+    /*
     const priceRuleId = priceRuleResponse.body.price_rule.id;
     const uniqueCode = `TRANSFERENCIA10-${uuidv4()}`;
 
@@ -57,9 +57,11 @@ export const handleOrderCreate = async (order) => {
         },
       },
     });
+    */
 
     // Aplicar el código de descuento a la orden
 
+    /*
     console.log('--------------- Llega al PUT ---------------')
 
     await client.put({
@@ -77,6 +79,7 @@ export const handleOrderCreate = async (order) => {
         },
       },
     });
+    */
 
     console.log('--------------- Termina la ejecución de los métodos ---------------')
 
@@ -84,9 +87,5 @@ export const handleOrderCreate = async (order) => {
   } catch (error) {
     console.error("Error al aplicar el descuento:", error); // Log para depuración
     throw new Error(error.message);
-  }
-  //} else {
-  //  console.log("Método de pago no es transferencia bancaria, no se aplicó descuento."); // Log para depuración
-  //  return "No se aplicó descuento";
-  //}
+  };
 };

@@ -64,6 +64,10 @@ export const handleOrderCreate = async (order) => {
 
     console.log('--------------- Llega al PUT ---------------')
 
+    console.log('--------------- Order ID ---------------', {
+      orderId: order.id,
+    });
+
     await client.put({
       path: `/admin/api/2023-10/orders/${order.id}.json`,
       data: {

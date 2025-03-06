@@ -34,9 +34,7 @@ app.post("/webhooks/orders/create", async (req, res) => {
   } catch (error) {
     console.error("Error en el manejador del webhook:", error); // Log para depuración
     res.status(500).json({ error: error.message });
-  } finally {
-    processingOrders.delete(orderId);
-  }
+  };
 });
 
 app.use(express.static('public'));

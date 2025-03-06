@@ -42,7 +42,6 @@ export const handleOrderCreate = async (order) => {
       },
     });
 
-    /*
     const priceRuleId = priceRuleResponse.body.price_rule.id;
     const uniqueCode = `TRANSFERENCIA10-${uuidv4()}`;
 
@@ -56,7 +55,6 @@ export const handleOrderCreate = async (order) => {
         },
       },
     });
-    */
 
     // Aplicar el código de descuento a la orden
 

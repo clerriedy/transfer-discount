@@ -69,7 +69,7 @@ export const handleOrderCreate = async (order) => {
             {
               code: uniqueCode,
               amount: -10,
-              type: "percentaje",
+              type: "fixed_amount",
             },
           ],
         },

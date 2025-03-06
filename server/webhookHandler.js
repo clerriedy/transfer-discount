@@ -26,6 +26,8 @@ export const handleOrderCreate = async (order) => {
   console.log('--------------- Llega al primer POST ---------------')
 
   try {
+    /*
+
     const priceRuleResponse = await client.post({
       path: "/admin/api/2023-10/price_rules.json",
       data: {
@@ -58,6 +60,8 @@ export const handleOrderCreate = async (order) => {
 
     // Aplicar el código de descuento a la orden
 
+    */
+
     console.log('--------------- Llega al PUT ---------------')
 
     await client.put({
@@ -67,7 +71,8 @@ export const handleOrderCreate = async (order) => {
           id: order.id,
           discount_codes: [
             {
-              code: uniqueCode,
+              //code: uniqueCode,
+              code: 'TRANSFERENCIA10',
               amount: -10,
               type: "fixed_amount",
             },

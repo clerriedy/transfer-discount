@@ -14,7 +14,7 @@ const shopify = shopifyApi({
 });
 
 export const handleOrderCreate = async (order) => {
-  console.log("Procesando pedido.");
+  console.log("--------------- Procesando pedido ---------------");
 
   const paymentMethod = order.gateway;
 
@@ -26,6 +26,8 @@ export const handleOrderCreate = async (order) => {
       }
     });
 
+    console.log('--------------- Llega al primer POST ---------------')
+
     try {
       const priceRuleResponse = await client.post({
         path: "/admin/api/2023-10/price_rules.json",
@@ -35,8 +37,9 @@ export const handleOrderCreate = async (order) => {
             target_type: "line_item",
             target_selection: "all",
             allocation_method: "across",
-            value_type: "fixed_amount",
-            value: -10,
+            //value_type: "fixed_amount",
+            value_type: "percentaje",
+            value: 10,
             customer_selection: "all",
             starts_at: new Date().toISOString(),
           },
@@ -45,6 +48,8 @@ export const handleOrderCreate = async (order) => {
 
       const priceRuleId = priceRuleResponse.body.price_rule.id;
       const uniqueCode = `TRANSFERENCIA10-${uuidv4()}`;
+
+      console.log('--------------- Llega al segundo POST ---------------')
 
       const discountResponse = await client.post({
         path: `/admin/api/2023-10/price_rules/${priceRuleId}/discount_codes.json`,
@@ -56,7 +61,10 @@ export const handleOrderCreate = async (order) => {
       });
 
       // Aplicar el código de descuento a la orden
-      const orderUpdateResponse = await client.put({
+
+      console.log('--------------- Llega al PUT ---------------')
+
+      await client.put({
         path: `/admin/api/2023-10/orders/${order.id}.json`,
         data: {
           order: {
@@ -65,12 +73,14 @@ export const handleOrderCreate = async (order) => {
               {
                 code: uniqueCode,
                 amount: 10,
-                type: "fixed_amount",
+                type: "percentaje",
               },
             ],
           },
         },
       });
+
+      console.log('--------------- Termina la ejecución de los métodos ---------------')
 
       return "Descuento aplicado";
     } catch (error) {

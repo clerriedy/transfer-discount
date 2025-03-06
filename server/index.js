@@ -28,14 +28,18 @@ app.post("/webhooks/orders/create", async (req, res) => {
   }
 
   processingOrders.add(orderId);
+
   console.log("Llegó la request al webhook:", {
     gateway: req.body.gateway,
   });
 
   try {
+    console.log('--------------- Entra al handleOrderCreate ---------------');
 
     const result = await handleOrderCreate(req.body);
+
     console.log("Resultado del manejador del webhook:", result); // Log para depuración
+
     res.status(200).send(result);
   } catch (error) {
     console.error("Error en el manejador del webhook:", error); // Log para depuración

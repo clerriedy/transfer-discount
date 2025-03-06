@@ -19,7 +19,7 @@ app.post("/webhooks/orders/create", async (req, res) => {
   fromGateway = req.body.gateway;
 
   if (fromGateway !== "Bank Deposit" || fromGateway === req.body.gateway) {
-    res.status(200).send({});
+    return res.status(200).send({});
   }
 
   if (processingOrders.has(orderId)) {
@@ -40,10 +40,7 @@ app.post("/webhooks/orders/create", async (req, res) => {
 
     console.log("Resultado del manejador del webhook:", result); // Log para depuración
 
-    //res.status(200).send(result);
-    res.status(200).send({
-
-    });
+    res.status(200).send(result);
   } catch (error) {
     console.error("Error en el manejador del webhook:", error); // Log para depuración
     res.status(500).json({ error: error.message });

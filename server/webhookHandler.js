@@ -16,79 +16,77 @@ const shopify = shopifyApi({
 export const handleOrderCreate = async (order) => {
   console.log("--------------- Procesando pedido ---------------");
 
-  const paymentMethod = order.gateway;
+  //if (paymentMethod === "Bank Deposit") {
+  const client = new shopify.clients.Rest({
+    session: {
+      accessToken: process.env.SHOPIFY_ACCESS_TOKEN,
+      shop: process.env.SHOPIFY_STORE_DOMAIN,
+    }
+  });
 
-  if (paymentMethod === "Bank Deposit") {
-    const client = new shopify.clients.Rest({
-      session: {
-        accessToken: process.env.SHOPIFY_ACCESS_TOKEN,
-        shop: process.env.SHOPIFY_STORE_DOMAIN,
-      }
+  console.log('--------------- Llega al primer POST ---------------')
+
+  try {
+    const priceRuleResponse = await client.post({
+      path: "/admin/api/2023-10/price_rules.json",
+      data: {
+        price_rule: {
+          title: "Descuento por transferencia bancaria",
+          target_type: "line_item",
+          target_selection: "all",
+          allocation_method: "across",
+          //value_type: "fixed_amount",
+          value_type: "percentaje",
+          value: 10,
+          customer_selection: "all",
+          starts_at: new Date().toISOString(),
+        },
+      },
     });
 
-    console.log('--------------- Llega al primer POST ---------------')
+    const priceRuleId = priceRuleResponse.body.price_rule.id;
+    const uniqueCode = `TRANSFERENCIA10-${uuidv4()}`;
 
-    try {
-      const priceRuleResponse = await client.post({
-        path: "/admin/api/2023-10/price_rules.json",
-        data: {
-          price_rule: {
-            title: "Descuento por transferencia bancaria",
-            target_type: "line_item",
-            target_selection: "all",
-            allocation_method: "across",
-            //value_type: "fixed_amount",
-            value_type: "percentaje",
-            value: 10,
-            customer_selection: "all",
-            starts_at: new Date().toISOString(),
-          },
+    console.log('--------------- Llega al segundo POST ---------------')
+
+    const discountResponse = await client.post({
+      path: `/admin/api/2023-10/price_rules/${priceRuleId}/discount_codes.json`,
+      data: {
+        discount_code: {
+          code: uniqueCode,
         },
-      });
+      },
+    });
 
-      const priceRuleId = priceRuleResponse.body.price_rule.id;
-      const uniqueCode = `TRANSFERENCIA10-${uuidv4()}`;
+    // Aplicar el código de descuento a la orden
 
-      console.log('--------------- Llega al segundo POST ---------------')
+    console.log('--------------- Llega al PUT ---------------')
 
-      const discountResponse = await client.post({
-        path: `/admin/api/2023-10/price_rules/${priceRuleId}/discount_codes.json`,
-        data: {
-          discount_code: {
-            code: uniqueCode,
-          },
+    await client.put({
+      path: `/admin/api/2023-10/orders/${order.id}.json`,
+      data: {
+        order: {
+          id: order.id,
+          discount_codes: [
+            {
+              code: uniqueCode,
+              amount: 10,
+              type: "percentaje",
+            },
+          ],
         },
-      });
+      },
+    });
 
-      // Aplicar el código de descuento a la orden
+    console.log('--------------- Termina la ejecución de los métodos ---------------')
 
-      console.log('--------------- Llega al PUT ---------------')
-
-      await client.put({
-        path: `/admin/api/2023-10/orders/${order.id}.json`,
-        data: {
-          order: {
-            id: order.id,
-            discount_codes: [
-              {
-                code: uniqueCode,
-                amount: 10,
-                type: "percentaje",
-              },
-            ],
-          },
-        },
-      });
-
-      console.log('--------------- Termina la ejecución de los métodos ---------------')
-
-      return "Descuento aplicado";
-    } catch (error) {
-      console.error("Error al aplicar el descuento:", error); // Log para depuración
-      throw new Error(error.message);
-    }
-  } else {
-    console.log("Método de pago no es transferencia bancaria, no se aplicó descuento."); // Log para depuración
-    return "No se aplicó descuento";
+    return "Descuento aplicado";
+  } catch (error) {
+    console.error("Error al aplicar el descuento:", error); // Log para depuración
+    throw new Error(error.message);
   }
+  //} else {
+  //  console.log("Método de pago no es transferencia bancaria, no se aplicó descuento."); // Log para depuración
+  //  return "No se aplicó descuento";
+  //}
 };
